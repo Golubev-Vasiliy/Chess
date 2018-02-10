@@ -4,9 +4,9 @@ class Chess
 {
     public $count = 0;
     private $field, $figure;
-    private $arr_figure = ['p' => 'pawn', 'r' => 'rook', 'h' => 'horse', 'b' => 'bishop', 'q' => 'queen', 'k' => 'king'];
-    private $arr_row = ['a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6, h=>7];
-    public function initial_chess()
+    private $arrFigure = ['p' => 'pawn', 'r' => 'rook', 'h' => 'horse', 'b' => 'bishop', 'q' => 'queen', 'k' => 'king'];
+    private $arrRow = ['a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6, h=>7];
+    public function initialChess()
     {
         for ($i=1; $i<=8; $i++){
             for ($j=0; $j<=7; $j++){
@@ -15,7 +15,7 @@ class Chess
         }
     }
 
-    public function print_field()
+    public function printField()
     {
         $this->count = 0;
         print "  a b c d e f g h \n";
@@ -31,7 +31,8 @@ class Chess
         if ($this->count != 0) printf("You have %d figures on the field\n", $this->count);
     }
 
-    public function save_field(){
+    public function saveField()
+    {
         $file = fopen("field.tt", "w");
         $title = "  a b c d e f g h \n";
         fwrite($file, $title);
@@ -46,7 +47,8 @@ class Chess
         fclose($file);
     }
 
-    public function read_file(){
+    public function readFile()
+    {
         $i = 8;
         $filename = "field.txt";
         $file = fopen($filename, 'r');
@@ -62,67 +64,58 @@ class Chess
                     $i--;
                 }
             }
-            $this->print_field();
+            $this->printField();
             printf("File %s are opened\n", $filename);
-        }
-        else {
+        } else {
             printf("File %s not found\n", $filename);
         }
     }
 
-    public function add_figure($figure, $row, $str){
+    public function addFigure($figure, $row, $str)
+    {
 
-        if ($this->field[$str][$this->arr_row[$row]] == 'e'){
-            $this->field[$str][$this->arr_row[$row]] = $figure;
-            print "You put " . $this->arr_figure[$figure] . " on the " . $row . $str . "\n";
-        }
-        else {
+        if ($this->field[$str][$this->arrRow[$row]] == 'e'){
+            $this->field[$str][$this->arrRow[$row]] = $figure;
+            print "You put " . $this->arrFigure[$figure] . " on the " . $row . $str . "\n";
+        } else {
             print "this point is don't empty\n";
         }
     }
 
-    public function move_figure(){
-        $this->print_field();
+    public function moveFigure()
+    {
+        $this->printField();
         print "What kind figure do you would like move? Choose his position:\n";
         fscanf(STDIN, "%1s%d\n", $row, $str);
         if ($row && $str ) {
-            if ($this->field[$str][$this->arr_row[$row]] != 'e') {
-                $this->figure = $this->field[$str][$this->arr_row[$row]];
-                printf("You take : %s\n", $this->arr_figure[$this->figure]);
-                $this->field[$str][$this->arr_row[$row]] = 'e';
+            if ($this->field[$str][$this->arrRow[$row]] != 'e') {
+                $this->figure = $this->field[$str][$this->arrRow[$row]];
+                printf("You take : %s\n", $this->arrFigure[$this->figure]);
+                $this->field[$str][$this->arrRow[$row]] = 'e';
                 print "choose new place: ";
                 fscanf(STDIN, "%1s%d\n", $newrow, $newstr);
-                $this->add_figure($this->figure, $newrow, $newstr);
-            }
-            else print "this point is empty\n";
-        }
-        else print "incorrect input\n";
+                $this->addFigure($this->figure, $newrow, $newstr);
+            } else print "this point is empty\n";
+        } else print "incorrect input\n";
     }
 
-    public function delete_figure()
+    public function deleteFigure()
     {
-        $this->print_field();
+        $this->printField();
         print "What kind figure do you would like delete?\n";
         fscanf(STDIN, "%1s%d\n", $row, $str);
         if ($row && $str ) {
-            if ($this->field[$str][$this->arr_row[$row]] != 'e') {
-                $this->field[$str][$this->arr_row[$row]] = 'e';
+            if ($this->field[$str][$this->arrRow[$row]] != 'e') {
+                $this->field[$str][$this->arrRow[$row]] = 'e';
                 print "this figure are deleted\n";
-            }
-            else print "this point is empty\n";
-        }
-        else print "incorrect input\n";
-    }
-
-
-    public function getFigure(){
-        return $this->figure;
+            } else print "this point is empty\n";
+        } else print "incorrect input\n";
     }
 }
 
 $chess = new Chess();
 
-$chess->initial_chess();
+$chess->initialChess();
 
 
 
@@ -139,45 +132,41 @@ while($command){
     fscanf(STDIN, "%d\n", $command);
     switch ($command){
         case 1:
-            $chess->print_field();
+            $chess->printField();
             break;
         case 2:
-            $chess->save_field();
+            $chess->saveField();
             break;
         case 3:
             $figure = "";
             $flagFigure = true;
-            $chess->print_field();
+            $chess->printField();
             while($flagFigure) {
                 print "Choose type of figure:\n p - pawn\n r - rook\n h - horse\n b - bishop\n q - queen\n k - king\n e - exit\n";
                 fscanf(STDIN, "%s", $figure);
                 if ($figure == 'p' || $figure == 'r' || $figure == 'h' || $figure == 'b' || $figure == 'q' || $figure == 'k'){
                     print "Choose place: ";
                     fscanf(STDIN, "%1s%d\n", $row, $str);
-                    $chess->add_figure($figure, $row, $str);
+                    $chess->addFigure($figure, $row, $str);
                     $flagFigure = false;
-                }
-                elseif ($figure == 'e') {
+                } elseif ($figure == 'e') {
                     $flagFigure = false;
-                }
-                else
+                } else
                     print "incorrect input\n";
             }
             break;
         case 4:
             if ($chess->count != 0) {
-                $chess->move_figure();
-            }
-            else print "Field are empty, you will must add figure\n";
+                $chess->moveFigure();
+            } else print "Field are empty, you will must add figure\n";
             break;
         case 5:
             if ($chess->count != 0) {
-                $chess->delete_figure($row, $str);
-            }
-            else print "Field are empty, you will must add figure\n";
+                $chess->deleteFigure($row, $str);
+            } else print "Field are empty, you will must add figure\n";
             break;
         case 6:
-            $chess->read_file();
+            $chess->readFile();
             break;
         case 0:
             $command = false;
@@ -186,4 +175,3 @@ while($command){
             print "Incorrect command\n";
     }
 }
-?>
